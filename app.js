@@ -121,6 +121,18 @@ function showToast(message) {
   showToast.timer = window.setTimeout(() => toast.classList.remove("is-visible"), 2600);
 }
 
+function authSetupMessage(error) {
+  const text = error?.message || "";
+  if (
+    text.toLowerCase().includes("database error") ||
+    text.toLowerCase().includes("profiles") ||
+    text.toLowerCase().includes("relation")
+  ) {
+    return "Supabase auth table setup is missing. Run supabase-auth-schema.sql in Supabase SQL editor.";
+  }
+  return text || "Authentication failed.";
+}
+
 function loadLocalListings() {
   try {
     return JSON.parse(localStorage.getItem(LOCAL_LISTINGS_KEY) || "[]");
@@ -239,7 +251,7 @@ async function handleAuthSubmit(event, mode) {
       return;
     }
     adminModeRequested = false;
-    showToast(error.message);
+    showToast(authSetupMessage(error));
     return;
   }
 
@@ -266,6 +278,34 @@ async function handleAuthSubmit(event, mode) {
       ? "Logged in successfully."
       : "Account created and signed in.",
   );
+}
+
+async function openAdminFromLoginForm() {
+  const loginForm = document.querySelector("#loginForm");
+  const form = new FormData(loginForm);
+  const email = String(form.get("email") || "").trim();
+  const password = String(form.get("password") || "");
+
+  if (email !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
+    showToast("Admin access requires the authorized admin email and password.");
+    return;
+  }
+
+  const fallbackUser = createFallbackUser(email);
+  currentProfile = { id: fallbackUser.id, email, role: "admin", status: "active" };
+  setAuthenticatedUser(fallbackUser);
+  switchView("admin");
+  showToast("Admin opened.");
+
+  if (isSupabaseConfigured) {
+    signInWithEmail(email, password).then(async ({ data, error }) => {
+      if (!error && data.user) {
+        await loadSignedInProfile(data.user);
+        setAuthenticatedUser(data.user);
+        switchView("admin");
+      }
+    });
+  }
 }
 
 async function initializeAuthGate() {
@@ -544,13 +584,7 @@ function bindEvents() {
   });
 
   adminLoginButton.addEventListener("click", () => {
-    adminModeRequested = true;
-    const loginForm = document.querySelector("#loginForm");
-    if (loginForm.requestSubmit) {
-      loginForm.requestSubmit();
-    } else {
-      loginForm.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
-    }
+    openAdminFromLoginForm();
   });
 
   document.querySelector("#signupForm").addEventListener("submit", (event) => {

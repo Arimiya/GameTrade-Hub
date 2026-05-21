@@ -153,7 +153,15 @@ export async function signInWithEmail(email, password) {
 
 export async function signUpWithEmail(email, password) {
   if (!supabase) return { data: null, error: new Error("Supabase is not configured.") };
-  return supabase.auth.signUp({ email, password });
+  return supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        email,
+      },
+    },
+  });
 }
 
 export async function signOut() {
