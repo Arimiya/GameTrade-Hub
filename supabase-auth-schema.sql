@@ -33,13 +33,17 @@ as $$
   );
 $$;
 
-create or replace function public.handle_new_user()
+create or replace function public.handle_verified_user()
 returns trigger
 language plpgsql
 security definer
 set search_path = public
 as $$
 begin
+  if new.email_confirmed_at is null then
+    return new;
+  end if;
+
   insert into public.profiles (id, email, role)
   values (
     new.id,
@@ -66,9 +70,12 @@ end;
 $$;
 
 drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-after insert on auth.users
-for each row execute procedure public.handle_new_user();
+drop trigger if exists on_auth_user_verified on auth.users;
+create trigger on_auth_user_verified
+after insert or update of email_confirmed_at on auth.users
+for each row
+when (new.email_confirmed_at is not null)
+execute procedure public.handle_verified_user();
 
 alter table public.profiles enable row level security;
 alter table public.wallets enable row level security;

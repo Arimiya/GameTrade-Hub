@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0f766e" />
     <title>GameTrade Hub</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=fixed-bottom-nav-1" />
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
-    <script type="module" src="app.js?v=admin-open-fix-1"></script>
+    <script type="module" src="app.js?v=trust-scores-1"></script>
   </head>
   <body>
     <section class="auth-screen" id="authScreen">
@@ -18,7 +18,7 @@
           <h1>GameTrade Hub</h1>
           <p>
             Sign in before entering the marketplace. New users can create an account
-            with email and password, then continue to listings, escrow, and seller tools.
+            with email and password, then continue to listings, Trade Assurance, and seller tools.
           </p>
         </div>
         <div class="auth-card">
@@ -37,10 +37,19 @@
 
           <form class="auth-form" id="signupForm">
             <h2>Create account</h2>
-            <p class="muted">Sign up with your email and create a password.</p>
+            <p class="muted">A verification code will be sent to your email.</p>
             <label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
             <label>Password<input name="password" type="password" autocomplete="new-password" placeholder="Minimum 6 characters" minlength="6" required /></label>
             <button class="primary-button" type="submit"><i data-lucide="user-plus"></i> Sign up</button>
+          </form>
+
+          <form class="auth-form" id="verifyForm">
+            <h2>Verify email</h2>
+            <p class="muted">Enter the code sent to your email/Gmail to finish creating your account.</p>
+            <label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
+            <label>Verification code<input name="token" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" required /></label>
+            <button class="primary-button" type="submit"><i data-lucide="badge-check"></i> Verify account</button>
+            <button class="secondary-button" type="button" id="resendCodeButton"><i data-lucide="mail"></i> Resend code</button>
           </form>
         </div>
       </div>
@@ -94,6 +103,30 @@
               <article><span>Purchases</span><strong>0</strong></article>
               <article><span>Disputes</span><strong>0</strong></article>
             </div>
+            <div class="trust-score-panel">
+              <div class="trust-score-heading">
+                <div>
+                  <p class="eyebrow">Buyer trust score</p>
+                  <h3 id="buyerTrustScore">New buyer</h3>
+                </div>
+                <span class="status-pill verified" id="buyerAccountAge">Account age: New</span>
+              </div>
+              <div class="trust-metric-grid">
+                <article><span>Completed purchases</span><strong id="buyerCompletedPurchases">0</strong></article>
+                <article><span>Dispute history</span><strong id="buyerDisputeHistory">0 disputes</strong></article>
+                <article><span>Account age</span><strong id="buyerAccountAgeMetric">New</strong></article>
+              </div>
+            </div>
+            <form class="profile-edit-form" id="profileForm">
+              <label>Full name<input id="profileNameInput" name="full_name" placeholder="Your name" /></label>
+              <label>Account type
+                <select id="profileRoleInput" name="role">
+                  <option value="buyer">Buyer</option>
+                  <option value="seller">Seller</option>
+                </select>
+              </label>
+              <button class="primary-button" type="submit"><i data-lucide="save"></i> Save profile</button>
+            </form>
             <div class="legal-note">
               <i data-lucide="shield-check"></i>
               <p>Your account is protected by Supabase email/password authentication. Add two-factor authentication before launch.</p>
@@ -106,7 +139,7 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Wallet</p>
-            <h2>Deposit and payment methods</h2>
+            <h2>Balances and payment methods</h2>
           </div>
           <span class="status-pill verified">Secure checkout</span>
         </div>
@@ -117,7 +150,13 @@
                 <p class="eyebrow">Wallet</p>
                 <h3>Deposit money</h3>
               </div>
-              <span class="status-pill pending">Gateway prototype</span>
+              <span class="status-pill verified">Provider required</span>
+            </div>
+            <div class="wallet-balance-grid">
+              <article><span>Available wallet</span><strong id="walletAvailable">GHS 0.00</strong></article>
+              <article><span>Trade assurance hold</span><strong id="walletHeld">GHS 0.00</strong></article>
+              <article><span>Seller balance</span><strong id="sellerAvailable">GHS 0.00</strong></article>
+              <article><span>Pending withdrawal</span><strong id="sellerPending">GHS 0.00</strong></article>
             </div>
             <form id="depositForm" class="deposit-form">
               <label>Deposit amount<input name="amount" type="number" min="1" placeholder="Enter amount" required /></label>
@@ -136,15 +175,22 @@
                 Continue deposit
               </button>
             </form>
-            <p class="muted">Prototype only. A real release should process card payments through Paystack, Flutterwave, Stripe, or another PCI-compliant gateway.</p>
+            <p class="muted">Never store card details in the app. Buyer payments should be handled by Stripe Connect, PayPal Marketplace, Paystack, Flutterwave, Mobile Money, or another provider that supports delayed seller payout.</p>
           </section>
           <aside class="profile-card">
-            <h3>Supported methods</h3>
+            <h3>Seller withdrawal</h3>
+            <form id="withdrawalForm" class="deposit-form">
+              <label>Amount<input name="amount" type="number" min="1" step="0.01" placeholder="Enter amount" required /></label>
+              <label>Payment method<input name="method" placeholder="Mobile Money, bank, PayPal..." required /></label>
+              <button class="secondary-button" type="submit"><i data-lucide="send"></i> Request withdrawal</button>
+            </form>
+            <h3>Wallet audit history</h3>
+            <div id="walletHistory" class="wallet-history"></div>
+            <h3>Rules</h3>
             <ul class="check-list">
-              <li><i data-lucide="credit-card"></i> Visa and Mastercard card deposits</li>
-              <li><i data-lucide="smartphone"></i> Mobile Money deposits</li>
-              <li><i data-lucide="landmark"></i> Bank transfer confirmation</li>
-              <li><i data-lucide="shield-check"></i> Payment records tied to your account</li>
+              <li><i data-lucide="shield-check"></i> Buyers cannot spend more than available wallet balance</li>
+              <li><i data-lucide="lock-keyhole"></i> Purchases move funds to trade assurance hold first</li>
+              <li><i data-lucide="scale"></i> Disputes keep money on hold until admin decision</li>
             </ul>
           </aside>
         </div>
@@ -156,7 +202,7 @@
           <p class="eyebrow">Secure marketplace beta</p>
           <h1>GameTrade Hub</h1>
           <p>
-            Buy and sell gaming accounts with video proof, admin review, escrow protection,
+            Buy and sell gaming accounts with video proof, admin review, Trade Assurance payment holds,
             transfer confirmation, and dispute handling built into the flow.
           </p>
           <div class="hero-actions">
@@ -266,6 +312,7 @@
             <div class="form-grid">
               <label>Game title<input required name="game" placeholder="e.g. Tactical Arena" /></label>
               <label>Account title<input required name="title" placeholder="Rare skins, high rank..." /></label>
+              <label>Selling price<input required name="price" type="number" min="1" step="0.01" placeholder="150" /></label>
               <label>Account level<input required name="level" type="number" min="1" placeholder="86" /></label>
               <label>Rank or tier<input required name="rank" placeholder="Diamond II" /></label>
               <label>Server or region<input required name="region" placeholder="West Africa" /></label>
@@ -332,8 +379,8 @@
       <section id="orders" class="view">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Escrow desk</p>
-            <h2>Escrow and transfer confirmation</h2>
+            <p class="eyebrow">Trade Assurance</p>
+            <h2>Payment hold and delivery confirmation</h2>
           </div>
           <button class="secondary-button" id="openDispute">
             <i data-lucide="message-square-warning"></i>
@@ -342,23 +389,95 @@
         </div>
         <div class="order-layout">
           <div class="timeline-panel">
-            <h3>Order #GTH-2409</h3>
-            <p class="muted" id="escrowStatusText">Account transfer is waiting for buyer confirmation.</p>
+            <h3>Trade Assurance order</h3>
+            <p class="muted" id="escrowStatusText">Choose Buy Now on a listing. Provider payment is held until proof, delivery, confirmation, or dispute decision.</p>
+            <div class="wallet-balance-grid order-summary-grid">
+              <article><span>Held order amount</span><strong id="currentOrderAmount">GHS 0.00</strong></article>
+              <article><span>Order status</span><strong id="currentOrderStatus">No active assurance order</strong></article>
+              <article><span>Inspection period</span><strong id="inspectionPeriodText">Not started</strong></article>
+              <article><span>Auto-release time</span><strong id="inspectionDeadlineText">Waiting for delivery</strong></article>
+            </div>
             <div class="timeline">
-              <div class="timeline-step done" id="stepPaymentHeld"><span></span><strong>Payment held</strong><small>Buyer payment is protected through escrow.</small></div>
-              <div class="timeline-step done" id="stepTransferStarted"><span></span><strong>Seller transfer started</strong><small>Login handoff and recovery update in progress.</small></div>
-              <div class="timeline-step active" id="stepBuyerConfirm"><span></span><strong>Buyer confirmation pending</strong><small>Buyer must verify account access and listed items.</small></div>
-              <div class="timeline-step" id="stepFundsRelease"><span></span><strong>Funds release status</strong><small id="fundsReleaseText">Escrow releases after confirmation or admin decision.</small></div>
+              <div class="timeline-step done" id="stepPaymentHeld"><span></span><strong>Payment held</strong><small>Buyer payment is held by the platform/provider for delayed payout.</small></div>
+              <div class="timeline-step active" id="stepTransferStarted"><span></span><strong>Seller proof required</strong><small>Seller must upload proof before delivery.</small></div>
+              <div class="timeline-step" id="stepBuyerConfirm"><span></span><strong>Buyer confirmation pending</strong><small>Buyer confirms only after checking the product/account.</small></div>
+              <div class="timeline-step" id="stepFundsRelease"><span></span><strong>Payout release status</strong><small id="fundsReleaseText">Seller payout releases after confirmation, admin decision, or dispute period expiry.</small></div>
             </div>
           </div>
           <div class="confirmation-panel">
-            <h3>Transfer checklist</h3>
+            <h3>Seller proof</h3>
+            <form id="sellerProofForm" class="deposit-form">
+              <label>Proof type
+                <select name="proofType" required>
+                  <option>Video proof</option>
+                  <option>Screenshots</option>
+                  <option>Ownership proof</option>
+                  <option>Serial number or receipt</option>
+                  <option>Shipping or tracking details</option>
+                  <option>Delivery details</option>
+                </select>
+              </label>
+              <label>Proof notes<textarea name="proofNotes" placeholder="Explain the proof uploaded for admin review." required></textarea></label>
+              <button class="secondary-button" type="submit"><i data-lucide="upload-cloud"></i> Submit seller proof</button>
+            </form>
+            <div class="button-row">
+              <button class="secondary-button" id="approveProof"><i data-lucide="badge-check"></i> Approve proof</button>
+              <button class="secondary-button danger-button" id="rejectProof"><i data-lucide="x-circle"></i> Reject proof</button>
+            </div>
+            <h3>Delivery and buyer confirmation</h3>
+            <form id="deliveryForm" class="deposit-form">
+              <label>Tracking number<input name="trackingNumber" placeholder="Tracking or shipment reference" required /></label>
+              <label>Buyer inspection period
+                <select name="inspectionHours" required>
+                  <option value="24">24 hours</option>
+                  <option value="48">48 hours</option>
+                  <option value="72">72 hours</option>
+                </select>
+              </label>
+              <label>Delivery notes<textarea name="deliveryNotes" placeholder="Seller delivery details, transfer notes, or safe handoff confirmation." required></textarea></label>
+              <button class="secondary-button" type="submit"><i data-lucide="truck"></i> Mark shipped</button>
+            </form>
+            <div class="button-row">
+              <button class="secondary-button" id="markDelivered"><i data-lucide="package-check"></i> Mark delivered</button>
+              <button class="secondary-button" id="checkAutoRelease"><i data-lucide="timer-reset"></i> Check auto-release</button>
+            </div>
+            <section class="secure-delivery-card">
+              <div>
+                <p class="eyebrow">Secure delivery</p>
+                <h3>Protected account handoff</h3>
+                <p class="muted">Do not send login details in normal chat. Submit credentials here only after buyer payment is held.</p>
+              </div>
+              <form id="secureDeliveryForm" class="deposit-form">
+                <label>Email or login<input name="login" autocomplete="off" placeholder="Account email, username, or game ID" required /></label>
+                <label>Password<input name="password" type="password" autocomplete="new-password" placeholder="Temporary password" required /></label>
+                <label>Backup codes<textarea name="backupCodes" placeholder="Recovery or backup codes, one per line if available."></textarea></label>
+                <label>Transfer instructions<textarea name="instructions" placeholder="Steps buyer must follow after receiving access." required></textarea></label>
+                <label>Platform details<input name="platformDetails" placeholder="PC, PlayStation, Xbox, Mobile, server, region..." required /></label>
+                <label>Original email access status
+                  <select name="emailAccessStatus" required>
+                    <option>Original email included</option>
+                    <option>Original email not included</option>
+                    <option>Recovery email changed to buyer</option>
+                    <option>Publisher account has no email access</option>
+                  </select>
+                </label>
+                <button class="secondary-button" type="submit"><i data-lucide="lock-keyhole"></i> Submit secure delivery</button>
+              </form>
+              <div class="secure-delivery-view" id="secureDeliveryView">
+                <div class="legal-note">
+                  <i data-lucide="lock"></i>
+                  <p id="secureDeliveryStatus">Buyer access is locked until payment is held.</p>
+                </div>
+                <div class="detail-list secure-delivery-details" id="secureDeliveryDetails" hidden></div>
+              </div>
+            </section>
+            <h3>Buyer checklist</h3>
             <label><input class="transfer-check" type="checkbox" /> Account login works</label>
             <label><input class="transfer-check" type="checkbox" /> Password and recovery details changed</label>
             <label><input class="transfer-check" type="checkbox" /> Listed rank, level, and items verified</label>
             <div class="button-row">
               <button class="primary-button" id="confirmTransfer"><i data-lucide="check-circle"></i> Confirm received</button>
-              <button class="secondary-button" id="pauseEscrow"><i data-lucide="pause-circle"></i> Pause release</button>
+              <button class="secondary-button" id="pauseEscrow"><i data-lucide="pause-circle"></i> Pause payout</button>
             </div>
           </div>
         </div>
@@ -375,6 +494,11 @@
               <option>Buyer cannot log in</option>
               <option>Account does not match listing</option>
               <option>Account was banned</option>
+              <option>Product not received</option>
+              <option>Wrong product</option>
+              <option>Damaged product</option>
+              <option>Fake product</option>
+              <option>Seller did not prove ownership</option>
             </select>
           </label>
           <label>Explain the issue<textarea id="disputeDescription" placeholder="Describe what happened and what proof you have." required></textarea></label>
@@ -427,7 +551,7 @@
       <button class="nav-link" data-view="wallet"><i data-lucide="wallet-cards"></i><span>Wallet</span></button>
       <button class="nav-link" data-view="marketplace"><i data-lucide="store"></i><span>Market</span></button>
       <button class="nav-link" data-view="sell"><i data-lucide="badge-plus"></i><span>Sell</span></button>
-      <button class="nav-link" data-view="orders"><i data-lucide="shield-check"></i><span>Escrow</span></button>
+      <button class="nav-link" data-view="orders"><i data-lucide="shield-check"></i><span>Assurance</span></button>
     </nav>
 
     <div class="modal-backdrop" id="listingModal" aria-hidden="true">
