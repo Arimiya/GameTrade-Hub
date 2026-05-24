@@ -1,6 +1,20 @@
-# GameTrade Hub
+# LedgerLite POS
 
-Static web app prototype for a gaming account marketplace with Supabase-ready listings.
+Static web app prototype for a subscription-based point of sale system for small and medium enterprises.
+
+## Features
+
+- Business dashboard with sales, profit, inventory, and low-stock metrics.
+- Checkout workflow with cart, discounts, tax, payment method, and receipt generation.
+- Product, category, barcode, and inventory stock management.
+- Customer records and purchase history totals.
+- Reports for sales, profit, tax, best-selling products, and staff performance.
+- Subscription plan selection for Basic, Standard, and Premium plans.
+- Admin dashboard for business account and subscription monitoring.
+
+## Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for the product roadmap based on the PRD.
 
 ## Run Locally
 
@@ -14,17 +28,4 @@ Open:
 http://localhost:4173
 ```
 
-## Supabase Setup
-
-1. Create a Supabase project.
-2. Open the Supabase SQL editor.
-3. Run `supabase-schema.sql`.
-4. Copy `supabase-config.example.js` into `supabase-config.js`.
-5. Paste your project URL and public anon key:
-
-```js
-export const SUPABASE_URL = "https://your-project-ref.supabase.co";
-export const SUPABASE_ANON_KEY = "your-public-anon-key";
-```
-
-When configured, the marketplace reads `active` listings from Supabase. Seller form submissions are inserted as `pending_review` listings for admin moderation.
+The prototype stores demo changes in browser local storage.

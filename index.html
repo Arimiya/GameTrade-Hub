@@ -3,567 +3,405 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0f766e" />
-    <title>GameTrade Hub</title>
-    <link rel="stylesheet" href="styles.css?v=fixed-bottom-nav-1" />
+    <meta name="theme-color" content="#1f3a5f" />
+    <title>LedgerLite POS</title>
+    <link rel="stylesheet" href="styles.css" />
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
-    <script type="module" src="app.js?v=trust-scores-1"></script>
+    <script type="module" src="app.js"></script>
   </head>
   <body>
-    <section class="auth-screen" id="authScreen">
-      <div class="auth-panel">
-        <div class="auth-copy">
-          <span class="brand-mark">GT</span>
-          <p class="eyebrow">Secure access</p>
-          <h1>GameTrade Hub</h1>
-          <p>
-            Sign in before entering the marketplace. New users can create an account
-            with email and password, then continue to listings, Trade Assurance, and seller tools.
-          </p>
-        </div>
-        <div class="auth-card">
-          <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
-            <button class="auth-tab is-active" type="button" data-auth-mode="login">Log in</button>
-            <button class="auth-tab" type="button" data-auth-mode="signup">Sign up</button>
-          </div>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Application header and navigation">
+        <a class="brand" href="#dashboard" data-view-target="dashboard" aria-label="LedgerLite POS dashboard">
+          <span class="brand-mark">LL</span>
+          <span>
+            <strong>LedgerLite POS</strong>
+            <small>Subscription POS for SMEs</small>
+          </span>
+        </a>
 
-          <form class="auth-form is-active" id="loginForm">
-            <h2>Log in</h2>
-            <label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
-            <label>Password<input name="password" type="password" autocomplete="current-password" placeholder="Your password" minlength="6" required /></label>
-            <button class="primary-button" type="submit"><i data-lucide="log-in"></i> Log in</button>
-            <button class="secondary-button" type="button" id="adminLoginButton"><i data-lucide="shield"></i> Open as Admin</button>
-          </form>
-
-          <form class="auth-form" id="signupForm">
-            <h2>Create account</h2>
-            <p class="muted">A verification code will be sent to your email.</p>
-            <label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
-            <label>Password<input name="password" type="password" autocomplete="new-password" placeholder="Minimum 6 characters" minlength="6" required /></label>
-            <button class="primary-button" type="submit"><i data-lucide="user-plus"></i> Sign up</button>
-          </form>
-
-          <form class="auth-form" id="verifyForm">
-            <h2>Verify email</h2>
-            <p class="muted">Enter the code sent to your email/Gmail to finish creating your account.</p>
-            <label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required /></label>
-            <label>Verification code<input name="token" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" required /></label>
-            <button class="primary-button" type="submit"><i data-lucide="badge-check"></i> Verify account</button>
-            <button class="secondary-button" type="button" id="resendCodeButton"><i data-lucide="mail"></i> Resend code</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <div class="app-shell" id="appShell" hidden>
-    <header class="topbar">
-      <a class="brand" href="#marketplace" aria-label="GameTrade Hub home">
-        <span class="brand-mark">GT</span>
-        <span>
-          <strong>GameTrade Hub</strong>
-          <small>Verified gaming account marketplace</small>
-        </span>
-      </a>
-      <div class="top-actions">
-        <button class="icon-button" title="Notifications" aria-label="Notifications">
-          <i data-lucide="bell"></i>
-          <span class="badge-dot"></span>
-        </button>
-        <button class="profile-button" data-view-target="profile" title="Open profile">
-          <span class="avatar">AK</span>
-          <span id="userEmailLabel">Signed in</span>
-        </button>
-      </div>
-    </header>
-
-    <main>
-      <section id="profile" class="view is-visible">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">User profile</p>
-            <h2>Welcome back</h2>
-          </div>
-          <button class="secondary-button" id="signOutButton">
-            <i data-lucide="log-out"></i>
-            Sign out
+        <nav class="side-nav" aria-label="Bottom navigation">
+          <button class="nav-link is-active" type="button" data-view-target="dashboard">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
           </button>
-        </div>
+          <button class="nav-link" type="button" data-view-target="checkout">
+            <i data-lucide="shopping-cart"></i>
+            <span>Checkout</span>
+          </button>
+          <button class="nav-link" type="button" data-view-target="inventory">
+            <i data-lucide="boxes"></i>
+            <span>Inventory</span>
+          </button>
+          <button class="nav-link" type="button" data-view-target="customers">
+            <i data-lucide="users"></i>
+            <span>Customers</span>
+          </button>
+          <button class="nav-link" type="button" data-view-target="reports">
+            <i data-lucide="chart-column"></i>
+            <span>Reports</span>
+          </button>
+          <button class="nav-link" type="button" data-view-target="billing">
+            <i data-lucide="badge-dollar-sign"></i>
+            <span>Plan</span>
+          </button>
+          <button class="nav-link" type="button" data-view-target="admin">
+            <i data-lucide="shield-check"></i>
+            <span>Admin</span>
+          </button>
+        </nav>
 
-        <div class="profile-layout profile-layout-single">
-          <section class="profile-card">
-            <div class="profile-hero">
-              <span class="avatar profile-avatar">AK</span>
-              <div>
-                <h3 id="profileEmail">Signed in user</h3>
-                <p class="muted">Manage your account, wallet, buying activity, and seller access.</p>
-              </div>
-            </div>
-            <div class="profile-stats">
-              <article><span>Listings</span><strong>0</strong></article>
-              <article><span>Purchases</span><strong>0</strong></article>
-              <article><span>Disputes</span><strong>0</strong></article>
-            </div>
-            <div class="trust-score-panel">
-              <div class="trust-score-heading">
-                <div>
-                  <p class="eyebrow">Buyer trust score</p>
-                  <h3 id="buyerTrustScore">New buyer</h3>
-                </div>
-                <span class="status-pill verified" id="buyerAccountAge">Account age: New</span>
-              </div>
-              <div class="trust-metric-grid">
-                <article><span>Completed purchases</span><strong id="buyerCompletedPurchases">0</strong></article>
-                <article><span>Dispute history</span><strong id="buyerDisputeHistory">0 disputes</strong></article>
-                <article><span>Account age</span><strong id="buyerAccountAgeMetric">New</strong></article>
-              </div>
-            </div>
-            <form class="profile-edit-form" id="profileForm">
-              <label>Full name<input id="profileNameInput" name="full_name" placeholder="Your name" /></label>
-              <label>Account type
-                <select id="profileRoleInput" name="role">
-                  <option value="buyer">Buyer</option>
-                  <option value="seller">Seller</option>
-                </select>
-              </label>
-              <button class="primary-button" type="submit"><i data-lucide="save"></i> Save profile</button>
-            </form>
-            <div class="legal-note">
-              <i data-lucide="shield-check"></i>
-              <p>Your account is protected by Supabase email/password authentication. Add two-factor authentication before launch.</p>
-            </div>
-          </section>
+        <div class="sidebar-footer">
+          <span class="status-pill success">Premium trial</span>
+          <small>Branch: Accra Central</small>
         </div>
-      </section>
+      </aside>
 
-      <section id="wallet" class="view">
-        <div class="section-heading">
+      <main class="main-content">
+        <header class="topbar">
           <div>
-            <p class="eyebrow">Wallet</p>
-            <h2>Balances and payment methods</h2>
+            <p class="eyebrow">Business workspace</p>
+            <h1 id="pageTitle">Dashboard</h1>
           </div>
-          <span class="status-pill verified">Secure checkout</span>
-        </div>
-        <div class="wallet-layout">
-          <section class="wallet-card">
-            <div class="wallet-heading">
-              <div>
-                <p class="eyebrow">Wallet</p>
-                <h3>Deposit money</h3>
-              </div>
-              <span class="status-pill verified">Provider required</span>
+          <div class="top-actions">
+            <button class="icon-button" type="button" title="Low stock alerts" aria-label="Low stock alerts" data-view-target="inventory">
+              <i data-lucide="bell"></i>
+              <span class="notification-dot" id="alertCount">0</span>
+            </button>
+            <button class="profile-button" type="button" data-view-target="billing">
+              <span class="avatar">AO</span>
+              <span>
+                <strong>Akosua Owusu</strong>
+                <small>Owner</small>
+              </span>
+            </button>
+          </div>
+        </header>
+
+        <section class="view is-visible" id="dashboard">
+          <div class="business-strip">
+            <div>
+              <p class="eyebrow">Today at Asempa Mini Mart</p>
+              <h2>Sales, stock, staff, and subscription health in one place.</h2>
             </div>
-            <div class="wallet-balance-grid">
-              <article><span>Available wallet</span><strong id="walletAvailable">GHS 0.00</strong></article>
-              <article><span>Trade assurance hold</span><strong id="walletHeld">GHS 0.00</strong></article>
-              <article><span>Seller balance</span><strong id="sellerAvailable">GHS 0.00</strong></article>
-              <article><span>Pending withdrawal</span><strong id="sellerPending">GHS 0.00</strong></article>
-            </div>
-            <form id="depositForm" class="deposit-form">
-              <label>Deposit amount<input name="amount" type="number" min="1" placeholder="Enter amount" required /></label>
-              <label>Payment method
-                <select name="method" required>
-                  <option value="visa">Visa card</option>
-                  <option value="mastercard">Mastercard</option>
-                  <option value="mobile-money">Mobile Money</option>
-                  <option value="bank-transfer">Bank transfer</option>
-                  <option value="paypal">PayPal</option>
-                </select>
-              </label>
-              <label>Payment reference<input name="reference" placeholder="Card name, phone number, or transfer note" required /></label>
-              <button class="primary-button" type="submit">
-                <i data-lucide="credit-card"></i>
-                Continue deposit
+            <div class="business-strip-actions">
+              <button class="secondary-button" type="button" data-view-target="inventory">
+                <i data-lucide="package-plus"></i>
+                Add stock
               </button>
-            </form>
-            <p class="muted">Never store card details in the app. Buyer payments should be handled by Stripe Connect, PayPal Marketplace, Paystack, Flutterwave, Mobile Money, or another provider that supports delayed seller payout.</p>
-          </section>
-          <aside class="profile-card">
-            <h3>Seller withdrawal</h3>
-            <form id="withdrawalForm" class="deposit-form">
-              <label>Amount<input name="amount" type="number" min="1" step="0.01" placeholder="Enter amount" required /></label>
-              <label>Payment method<input name="method" placeholder="Mobile Money, bank, PayPal..." required /></label>
-              <button class="secondary-button" type="submit"><i data-lucide="send"></i> Request withdrawal</button>
-            </form>
-            <h3>Wallet audit history</h3>
-            <div id="walletHistory" class="wallet-history"></div>
-            <h3>Rules</h3>
-            <ul class="check-list">
-              <li><i data-lucide="shield-check"></i> Buyers cannot spend more than available wallet balance</li>
-              <li><i data-lucide="lock-keyhole"></i> Purchases move funds to trade assurance hold first</li>
-              <li><i data-lucide="scale"></i> Disputes keep money on hold until admin decision</li>
-            </ul>
-          </aside>
-        </div>
-      </section>
+              <button class="primary-button" type="button" data-view-target="checkout">
+                <i data-lucide="scan-barcode"></i>
+                Open checkout
+              </button>
+            </div>
+          </div>
 
-      <section id="marketplace" class="view">
-      <div class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Secure marketplace beta</p>
-          <h1>GameTrade Hub</h1>
-          <p>
-            Buy and sell gaming accounts with video proof, admin review, Trade Assurance payment holds,
-            transfer confirmation, and dispute handling built into the flow.
-          </p>
-          <div class="hero-actions">
-            <button class="primary-button" data-view-target="marketplace">
-              <i data-lucide="search"></i>
-              Browse accounts
-            </button>
-            <button class="secondary-button" data-view-target="sell">
-              <i data-lucide="upload-cloud"></i>
-              Create listing
-            </button>
-          </div>
-        </div>
-        <div class="hero-board" aria-label="Marketplace trust metrics">
-          <div>
-            <span>Active listings</span>
-            <strong id="activeListings">0</strong>
-          </div>
-          <div>
-            <span>Protected trades</span>
-            <strong>Buy safe</strong>
-          </div>
-          <div>
-            <span>Dispute rate</span>
-            <strong>0%</strong>
-          </div>
-        </div>
-      </div>
+          <div class="metric-grid" id="metricGrid"></div>
 
-      <div class="trust-strip">
-        <span><i data-lucide="shield-check"></i> Seller verification</span>
-        <span><i data-lucide="video"></i> Video proof required</span>
-        <span><i data-lucide="lock-keyhole"></i> Protected buying</span>
-        <span><i data-lucide="scale"></i> Admin dispute resolution</span>
-      </div>
-
-      <div class="marketplace-content">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Marketplace</p>
-            <h2>Browse gaming accounts</h2>
-          </div>
-          <button class="secondary-button" id="clearFilters">
-            <i data-lucide="rotate-ccw"></i>
-            Reset filters
-          </button>
-        </div>
-
-        <div class="market-shell">
-          <aside class="filters" aria-label="Marketplace filters">
-            <label>
-              Search
-              <div class="input-icon">
-                <i data-lucide="search"></i>
-                <input id="searchInput" type="search" placeholder="Game, rank, item..." />
-              </div>
-            </label>
-            <label>
-              Platform
-              <select id="platformFilter">
-                <option value="all">All platforms</option>
-                <option>PC</option>
-                <option>PlayStation</option>
-                <option>Xbox</option>
-                <option>Mobile</option>
-              </select>
-            </label>
-            <label>
-              Region
-              <select id="regionFilter">
-                <option value="all">All regions</option>
-                <option>Europe</option>
-                <option>North America</option>
-                <option>West Africa</option>
-                <option>Asia</option>
-              </select>
-            </label>
-            <label>
-              Sort
-              <select id="sortFilter">
-                <option value="newest">Newest</option>
-                <option value="rating">Verified sellers</option>
-              </select>
-            </label>
-          </aside>
-          <div>
-            <div class="result-line">
-              <span id="resultCount">0 listings</span>
-              <span class="muted">Every public listing passed admin review.</span>
-            </div>
-            <div id="listingGrid" class="listing-grid" aria-live="polite"></div>
-          </div>
-        </div>
-      </div>
-      </section>
-
-      <section id="sell" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Seller studio</p>
-            <h2>Create account listing</h2>
-          </div>
-          <span class="status-pill pending">Draft autosaved</span>
-        </div>
-        <div class="seller-layout">
-          <form class="listing-form" id="listingForm">
-            <div class="form-grid">
-              <label>Game title<input required name="game" placeholder="e.g. Tactical Arena" /></label>
-              <label>Account title<input required name="title" placeholder="Rare skins, high rank..." /></label>
-              <label>Selling price<input required name="price" type="number" min="1" step="0.01" placeholder="150" /></label>
-              <label>Account level<input required name="level" type="number" min="1" placeholder="86" /></label>
-              <label>Rank or tier<input required name="rank" placeholder="Diamond II" /></label>
-              <label>Server or region<input required name="region" placeholder="West Africa" /></label>
-              <label>Platform
-                <select name="platform">
-                  <option>PC</option>
-                  <option>PlayStation</option>
-                  <option>Xbox</option>
-                  <option>Mobile</option>
-                </select>
-              </label>
-              <label>Transfer method
-                <select name="transfer" required>
-                  <option value="visa">Visa card</option>
-                  <option value="mastercard">Mastercard</option>
-                  <option value="mobile-money">Mobile Money</option>
-                  <option value="bank-transfer">Bank transfer</option>
-                  <option value="paypal">PayPal</option>
-                </select>
-              </label>
-            </div>
-            <label>Description<textarea required name="description" placeholder="Include inventory, age, currency, ban history, and seller notes."></textarea></label>
-            <div class="upload-row">
-              <div class="upload-box">
-                <i data-lucide="video"></i>
-                <strong>Video proof</strong>
-                <span>MP4, MOV, or WebM. Keep passwords and recovery details hidden.</span>
-                <input id="videoUpload" class="file-input" type="file" accept="video/mp4,video/quicktime,video/webm" />
-                <button type="button" class="secondary-button" id="chooseVideoButton">Choose video</button>
-                <small id="videoFileName">No video selected</small>
-              </div>
-              <div class="upload-box">
-                <i data-lucide="image"></i>
-                <strong>Screenshots</strong>
-                <span>Inventory, achievements, rank, and safe profile views.</span>
-                <input id="imageUpload" class="file-input" type="file" accept="image/png,image/jpeg,image/webp" multiple />
-                <button type="button" class="secondary-button" id="chooseImageButton">Choose images</button>
-                <small id="imageFileName">No images selected</small>
-              </div>
-            </div>
-            <div class="legal-note">
-              <i data-lucide="alert-triangle"></i>
-              <p>Account trading may violate publisher terms. Sellers are responsible for accurate proof and lawful transfer.</p>
-            </div>
-            <button class="primary-button" type="submit">
-              <i data-lucide="send"></i>
-              Submit for review
-            </button>
-          </form>
-
-          <aside class="review-card">
-            <h3>Approval checklist</h3>
-            <ul class="check-list">
-              <li><i data-lucide="check"></i> Video shows level, rank, and inventory</li>
-              <li><i data-lucide="check"></i> No passwords or recovery emails visible</li>
-              <li><i data-lucide="check"></i> Transfer method is realistic</li>
-              <li><i data-lucide="check"></i> Ban history is disclosed</li>
-              <li><i data-lucide="check"></i> Game is allowed by moderation policy</li>
-            </ul>
-          </aside>
-        </div>
-      </section>
-
-      <section id="orders" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Trade Assurance</p>
-            <h2>Payment hold and delivery confirmation</h2>
-          </div>
-          <button class="secondary-button" id="openDispute">
-            <i data-lucide="message-square-warning"></i>
-            Open dispute
-          </button>
-        </div>
-        <div class="order-layout">
-          <div class="timeline-panel">
-            <h3>Trade Assurance order</h3>
-            <p class="muted" id="escrowStatusText">Choose Buy Now on a listing. Provider payment is held until proof, delivery, confirmation, or dispute decision.</p>
-            <div class="wallet-balance-grid order-summary-grid">
-              <article><span>Held order amount</span><strong id="currentOrderAmount">GHS 0.00</strong></article>
-              <article><span>Order status</span><strong id="currentOrderStatus">No active assurance order</strong></article>
-              <article><span>Inspection period</span><strong id="inspectionPeriodText">Not started</strong></article>
-              <article><span>Auto-release time</span><strong id="inspectionDeadlineText">Waiting for delivery</strong></article>
-            </div>
-            <div class="timeline">
-              <div class="timeline-step done" id="stepPaymentHeld"><span></span><strong>Payment held</strong><small>Buyer payment is held by the platform/provider for delayed payout.</small></div>
-              <div class="timeline-step active" id="stepTransferStarted"><span></span><strong>Seller proof required</strong><small>Seller must upload proof before delivery.</small></div>
-              <div class="timeline-step" id="stepBuyerConfirm"><span></span><strong>Buyer confirmation pending</strong><small>Buyer confirms only after checking the product/account.</small></div>
-              <div class="timeline-step" id="stepFundsRelease"><span></span><strong>Payout release status</strong><small id="fundsReleaseText">Seller payout releases after confirmation, admin decision, or dispute period expiry.</small></div>
-            </div>
-          </div>
-          <div class="confirmation-panel">
-            <h3>Seller proof</h3>
-            <form id="sellerProofForm" class="deposit-form">
-              <label>Proof type
-                <select name="proofType" required>
-                  <option>Video proof</option>
-                  <option>Screenshots</option>
-                  <option>Ownership proof</option>
-                  <option>Serial number or receipt</option>
-                  <option>Shipping or tracking details</option>
-                  <option>Delivery details</option>
-                </select>
-              </label>
-              <label>Proof notes<textarea name="proofNotes" placeholder="Explain the proof uploaded for admin review." required></textarea></label>
-              <button class="secondary-button" type="submit"><i data-lucide="upload-cloud"></i> Submit seller proof</button>
-            </form>
-            <div class="button-row">
-              <button class="secondary-button" id="approveProof"><i data-lucide="badge-check"></i> Approve proof</button>
-              <button class="secondary-button danger-button" id="rejectProof"><i data-lucide="x-circle"></i> Reject proof</button>
-            </div>
-            <h3>Delivery and buyer confirmation</h3>
-            <form id="deliveryForm" class="deposit-form">
-              <label>Tracking number<input name="trackingNumber" placeholder="Tracking or shipment reference" required /></label>
-              <label>Buyer inspection period
-                <select name="inspectionHours" required>
-                  <option value="24">24 hours</option>
-                  <option value="48">48 hours</option>
-                  <option value="72">72 hours</option>
-                </select>
-              </label>
-              <label>Delivery notes<textarea name="deliveryNotes" placeholder="Seller delivery details, transfer notes, or safe handoff confirmation." required></textarea></label>
-              <button class="secondary-button" type="submit"><i data-lucide="truck"></i> Mark shipped</button>
-            </form>
-            <div class="button-row">
-              <button class="secondary-button" id="markDelivered"><i data-lucide="package-check"></i> Mark delivered</button>
-              <button class="secondary-button" id="checkAutoRelease"><i data-lucide="timer-reset"></i> Check auto-release</button>
-            </div>
-            <section class="secure-delivery-card">
-              <div>
-                <p class="eyebrow">Secure delivery</p>
-                <h3>Protected account handoff</h3>
-                <p class="muted">Do not send login details in normal chat. Submit credentials here only after buyer payment is held.</p>
-              </div>
-              <form id="secureDeliveryForm" class="deposit-form">
-                <label>Email or login<input name="login" autocomplete="off" placeholder="Account email, username, or game ID" required /></label>
-                <label>Password<input name="password" type="password" autocomplete="new-password" placeholder="Temporary password" required /></label>
-                <label>Backup codes<textarea name="backupCodes" placeholder="Recovery or backup codes, one per line if available."></textarea></label>
-                <label>Transfer instructions<textarea name="instructions" placeholder="Steps buyer must follow after receiving access." required></textarea></label>
-                <label>Platform details<input name="platformDetails" placeholder="PC, PlayStation, Xbox, Mobile, server, region..." required /></label>
-                <label>Original email access status
-                  <select name="emailAccessStatus" required>
-                    <option>Original email included</option>
-                    <option>Original email not included</option>
-                    <option>Recovery email changed to buyer</option>
-                    <option>Publisher account has no email access</option>
-                  </select>
-                </label>
-                <button class="secondary-button" type="submit"><i data-lucide="lock-keyhole"></i> Submit secure delivery</button>
-              </form>
-              <div class="secure-delivery-view" id="secureDeliveryView">
-                <div class="legal-note">
-                  <i data-lucide="lock"></i>
-                  <p id="secureDeliveryStatus">Buyer access is locked until payment is held.</p>
+          <div class="dashboard-grid">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Sales trend</p>
+                  <h2>Weekly performance</h2>
                 </div>
-                <div class="detail-list secure-delivery-details" id="secureDeliveryDetails" hidden></div>
+                <span class="status-pill neutral">Live demo data</span>
+              </div>
+              <div class="bar-chart" id="salesChart" aria-label="Weekly sales chart"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Action required</p>
+                  <h2>Low stock</h2>
+                </div>
+                <button class="text-button" type="button" data-view-target="inventory">Manage</button>
+              </div>
+              <div class="compact-list" id="lowStockList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Recent activity</p>
+                  <h2>Transactions</h2>
+                </div>
+              </div>
+              <div class="compact-list" id="recentSalesList"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="checkout">
+          <div class="workspace-grid checkout-layout">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Sales and checkout</p>
+                  <h2>Product catalog</h2>
+                </div>
+                <div class="search-box">
+                  <i data-lucide="search"></i>
+                  <input id="productSearch" type="search" placeholder="Search name, category, or barcode" />
+                </div>
+              </div>
+              <div class="product-grid" id="checkoutProducts"></div>
+            </section>
+
+            <aside class="panel checkout-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Current sale</p>
+                  <h2>Cart</h2>
+                </div>
+                <button class="icon-button subtle" type="button" id="clearCartButton" title="Clear cart" aria-label="Clear cart">
+                  <i data-lucide="trash-2"></i>
+                </button>
+              </div>
+              <div class="cart-list" id="cartList"></div>
+
+              <label class="field">
+                Customer
+                <select id="saleCustomer"></select>
+              </label>
+              <div class="form-grid two">
+                <label class="field">Discount %<input id="discountInput" type="number" min="0" max="50" value="5" /></label>
+                <label class="field">Tax %<input id="taxInput" type="number" min="0" max="25" value="12.5" /></label>
+              </div>
+              <label class="field">
+                Payment method
+                <select id="paymentMethod">
+                  <option>Cash</option>
+                  <option>Card</option>
+                  <option>Mobile Money</option>
+                  <option>Split Payment</option>
+                </select>
+              </label>
+
+              <div class="totals-box" id="cartTotals"></div>
+              <button class="primary-button full-width" type="button" id="completeSaleButton">
+                <i data-lucide="receipt"></i>
+                Complete sale
+              </button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="inventory">
+          <div class="workspace-grid inventory-layout">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Product management</p>
+                  <h2>Products and stock</h2>
+                </div>
+                <div class="search-box">
+                  <i data-lucide="search"></i>
+                  <input id="inventorySearch" type="search" placeholder="Search inventory" />
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Category</th>
+                      <th>Price</th>
+                      <th>Stock</th>
+                      <th>Status</th>
+                      <th>Adjust</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventoryTable"></tbody>
+                </table>
               </div>
             </section>
-            <h3>Buyer checklist</h3>
-            <label><input class="transfer-check" type="checkbox" /> Account login works</label>
-            <label><input class="transfer-check" type="checkbox" /> Password and recovery details changed</label>
-            <label><input class="transfer-check" type="checkbox" /> Listed rank, level, and items verified</label>
-            <div class="button-row">
-              <button class="primary-button" id="confirmTransfer"><i data-lucide="check-circle"></i> Confirm received</button>
-              <button class="secondary-button" id="pauseEscrow"><i data-lucide="pause-circle"></i> Pause payout</button>
-            </div>
+
+            <aside class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Add product</p>
+                  <h2>Inventory record</h2>
+                </div>
+              </div>
+              <form id="productForm" class="stacked-form">
+                <label class="field">Product name<input name="name" required placeholder="e.g. Detergent 1kg" /></label>
+                <label class="field">Category<input name="category" required placeholder="Groceries, Pharmacy..." /></label>
+                <div class="form-grid two">
+                  <label class="field">Price<input name="price" type="number" min="1" step="0.01" required /></label>
+                  <label class="field">Cost<input name="cost" type="number" min="1" step="0.01" required /></label>
+                </div>
+                <div class="form-grid two">
+                  <label class="field">Quantity<input name="stock" type="number" min="0" required /></label>
+                  <label class="field">Low alert<input name="reorder" type="number" min="1" value="10" required /></label>
+                </div>
+                <label class="field">Barcode<input name="barcode" placeholder="Optional barcode" /></label>
+                <button class="primary-button full-width" type="submit">
+                  <i data-lucide="plus"></i>
+                  Save product
+                </button>
+              </form>
+            </aside>
           </div>
-        </div>
-        <form class="dispute-panel" id="disputePanel" hidden>
+        </section>
+
+        <section class="view" id="customers">
+          <div class="workspace-grid customers-layout">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Customer management</p>
+                  <h2>Customer records</h2>
+                </div>
+              </div>
+              <div class="customer-grid" id="customerGrid"></div>
+            </section>
+
+            <aside class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Add customer</p>
+                  <h2>Profile</h2>
+                </div>
+              </div>
+              <form id="customerForm" class="stacked-form">
+                <label class="field">Full name<input name="name" required placeholder="Customer name" /></label>
+                <label class="field">Phone<input name="phone" required placeholder="+233..." /></label>
+                <label class="field">Email<input name="email" type="email" placeholder="Optional email" /></label>
+                <label class="field">Address<textarea name="address" rows="3" placeholder="Optional address"></textarea></label>
+                <button class="primary-button full-width" type="submit">
+                  <i data-lucide="user-plus"></i>
+                  Save customer
+                </button>
+              </form>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view" id="reports">
+          <div class="report-grid">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Reports and analytics</p>
+                  <h2>Business reports</h2>
+                </div>
+                <button class="secondary-button" type="button" id="exportReportButton">
+                  <i data-lucide="file-down"></i>
+                  Export CSV
+                </button>
+              </div>
+              <div class="report-cards" id="reportCards"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Best sellers</p>
+                  <h2>Product performance</h2>
+                </div>
+              </div>
+              <div class="compact-list" id="bestSellersList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Staff sales</p>
+                  <h2>Team performance</h2>
+                </div>
+              </div>
+              <div class="compact-list" id="staffList"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="billing">
+          <div class="billing-grid">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Subscription management</p>
+                  <h2>Plan access</h2>
+                </div>
+                <span class="status-pill success" id="subscriptionStatus">Active</span>
+              </div>
+              <div class="plan-grid" id="planGrid"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Payment history</p>
+                  <h2>Billing activity</h2>
+                </div>
+              </div>
+              <div class="compact-list" id="billingHistory"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="admin">
+          <div class="admin-grid">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Platform admin</p>
+                  <h2>Businesses</h2>
+                </div>
+                <span class="status-pill warning">Demo controls</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Business</th>
+                      <th>Plan</th>
+                      <th>Status</th>
+                      <th>Users</th>
+                      <th>MRR</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="businessTable"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Audit logs</p>
+                  <h2>Recent platform events</h2>
+                </div>
+              </div>
+              <div class="compact-list" id="auditList"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="receipt-modal" id="receiptModal" hidden>
+      <div class="receipt-card">
+        <div class="panel-heading">
           <div>
-            <p class="eyebrow">Dispute</p>
-            <h3>Open a dispute</h3>
+            <p class="eyebrow">Receipt generated</p>
+            <h2>Asempa Mini Mart</h2>
           </div>
-          <label>Reason
-            <select id="disputeReason" required>
-              <option value="">Select reason</option>
-              <option>Account details are wrong</option>
-              <option>Seller did not transfer account</option>
-              <option>Buyer cannot log in</option>
-              <option>Account does not match listing</option>
-              <option>Account was banned</option>
-              <option>Product not received</option>
-              <option>Wrong product</option>
-              <option>Damaged product</option>
-              <option>Fake product</option>
-              <option>Seller did not prove ownership</option>
-            </select>
-          </label>
-          <label>Explain the issue<textarea id="disputeDescription" placeholder="Describe what happened and what proof you have." required></textarea></label>
-          <button class="primary-button" type="submit"><i data-lucide="send"></i> Submit dispute</button>
-        </form>
-      </section>
-
-      <section id="admin" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Admin console</p>
-            <h2>Moderation and operations</h2>
-          </div>
-          <span class="status-pill verified">Super Admin</span>
+          <button class="icon-button subtle" type="button" id="closeReceiptButton" title="Close receipt" aria-label="Close receipt">
+            <i data-lucide="x"></i>
+          </button>
         </div>
-        <div class="admin-grid">
-          <article class="metric-card"><span>Pending listings</span><strong>12</strong><small>Average review time: 38 min</small></article>
-          <article class="metric-card"><span>Open disputes</span><strong>4</strong><small>2 awaiting evidence</small></article>
-          <article class="metric-card"><span>Withdrawal requests</span><strong>9</strong><small>Pending admin review</small></article>
-          <article class="metric-card"><span>Flagged messages</span><strong>17</strong><small>Off-platform payment warnings</small></article>
-        </div>
-        <div class="moderation-layout">
-          <div class="queue-panel">
-            <h3>Listing review queue</h3>
-            <div id="moderationQueue"></div>
-          </div>
-          <div class="queue-panel">
-            <h3>Risk controls</h3>
-            <div class="risk-item"><i data-lucide="ban"></i><div><strong>Prohibited game account</strong><span>Reject listings from restricted publishers.</span></div></div>
-            <div class="risk-item"><i data-lucide="scan-eye"></i><div><strong>Sensitive video exposure</strong><span>Require replacement when personal data appears.</span></div></div>
-            <div class="risk-item"><i data-lucide="badge-alert"></i><div><strong>Suspicious seller</strong><span>Route to verification before payout.</span></div></div>
-            <div class="risk-item"><i data-lucide="receipt"></i><div><strong>Payment integrity</strong><span>Manual refund and release actions are logged.</span></div></div>
-          </div>
-        </div>
-        <div class="queue-panel admin-control-panel">
-          <div class="section-heading compact-heading">
-            <div>
-              <p class="eyebrow">Full control</p>
-              <h3>Account listings</h3>
-            </div>
-            <button class="secondary-button" id="refreshAdminListings"><i data-lucide="refresh-cw"></i> Refresh</button>
-          </div>
-          <div id="adminListingControl" class="admin-listing-control"></div>
-        </div>
-      </section>
-    </main>
-
-    <nav class="main-nav" aria-label="Primary navigation">
-      <button class="nav-link is-active" data-view="profile"><i data-lucide="user-round"></i><span>Profile</span></button>
-      <button class="nav-link" data-view="wallet"><i data-lucide="wallet-cards"></i><span>Wallet</span></button>
-      <button class="nav-link" data-view="marketplace"><i data-lucide="store"></i><span>Market</span></button>
-      <button class="nav-link" data-view="sell"><i data-lucide="badge-plus"></i><span>Sell</span></button>
-      <button class="nav-link" data-view="orders"><i data-lucide="shield-check"></i><span>Assurance</span></button>
-    </nav>
-
-    <div class="modal-backdrop" id="listingModal" aria-hidden="true">
-      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <button class="icon-button close-modal" aria-label="Close listing details">
-          <i data-lucide="x"></i>
+        <div id="receiptContent"></div>
+        <button class="secondary-button full-width" type="button" onclick="window.print()">
+          <i data-lucide="printer"></i>
+          Print receipt
         </button>
-        <div id="modalContent"></div>
-      </section>
+      </div>
     </div>
 
-    <div class="toast" id="toast" role="status"></div>
-    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </body>
 </html>
