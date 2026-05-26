@@ -3,578 +3,449 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0f766e" />
-    <title>GameTrade Hub</title>
+    <meta name="theme-color" content="#060816" />
+    <title>GameMarket</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js" defer></script>
-    <script src="app.js" defer></script>
+    <script src="app.js?v=app-polish" defer></script>
   </head>
   <body>
-    <header class="topbar">
-      <a class="brand" href="#profile" aria-label="GameTrade Hub home">
-        <span class="brand-mark">GT</span>
-        <span>
-          <strong>GameTrade Hub</strong>
-          <small>Trade Assurance gaming account marketplace</small>
-        </span>
-      </a>
-      <nav class="main-nav" aria-label="Primary navigation">
-        <button class="nav-link is-active" data-view="profile">Profile</button>
-        <button class="nav-link" data-view="marketplace">Market</button>
-        <button class="nav-link" data-view="sell">Sell</button>
-        <button class="nav-link" data-view="wallet">Wallet</button>
-        <button class="nav-link" data-view="orders">Assurance</button>
-      </nav>
-      <div class="top-actions">
-        <button class="icon-button" title="Notifications" aria-label="Notifications">
-          <i data-lucide="bell"></i>
-          <span class="badge-dot"></span>
-        </button>
-        <button class="profile-button">
-          <span class="avatar">AK</span>
-          <span id="topProfileName">Guest</span>
-        </button>
-      </div>
-    </header>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Sidebar navigation">
+        <a class="brand" href="/" id="brandHome" aria-label="GameMarket home">
+          <span class="brand-icon"><i data-lucide="gamepad-2"></i></span>
+          <strong>GameMarket</strong>
+        </a>
 
-    <main>
-      <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Verified marketplace beta</p>
-          <h1>GameTrade Hub</h1>
-          <p>
-            Buy and sell gaming accounts with video proof, seller verification,
-            wallet deposits, Trade Assurance payment holds, secure delivery,
-            inspection windows, and admin dispute protection.
-          </p>
-          <div class="hero-actions">
-            <button class="primary-button" data-view-target="marketplace">
-              <i data-lucide="search"></i>
-              Browse accounts
-            </button>
-            <button class="secondary-button" data-view-target="sell">
-              <i data-lucide="upload-cloud"></i>
-              Create listing
-            </button>
+        <nav class="side-nav" aria-label="Main navigation">
+          <a class="nav-item is-active" data-section="home" href="/"><i data-lucide="home"></i><span>Home</span></a>
+          <a class="nav-item" data-section="browse" href="/?page=browse"><i data-lucide="search"></i><span>Browse</span></a>
+          <a class="nav-item" data-section="categories" href="/?page=categories"><i data-lucide="layout-grid"></i><span>Categories</span></a>
+          <a class="nav-item" data-section="sell" href="/?page=sell"><i data-lucide="badge-dollar-sign"></i><span>Sell Account</span></a>
+          <a class="nav-item" data-section="orders" href="/?page=orders"><i data-lucide="clipboard-list"></i><span>My Orders</span></a>
+          <a class="nav-item" data-section="messages" href="/?page=messages"><i data-lucide="mail"></i><span>Messages</span></a>
+          <a class="nav-item" data-section="favorites" href="/?page=favorites"><i data-lucide="heart"></i><span>Favorites</span></a>
+          <a class="nav-item" data-section="wallet" href="/?page=wallet"><i data-lucide="wallet-cards"></i><span>Wallet</span></a>
+          <a class="nav-item" data-section="support" href="/?page=support"><i data-lucide="circle-help"></i><span>Support</span></a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button class="language-button" id="languageButton">
+            <span><i data-lucide="globe-2"></i> English</span>
+            <i data-lucide="chevron-down"></i>
+          </button>
+          <div class="language-menu" id="languageMenu" aria-hidden="true">
+            <button data-language="English">English</button>
+            <button data-language="French">French</button>
+            <button data-language="Spanish">Spanish</button>
           </div>
-        </div>
-        <div class="hero-board" aria-label="Marketplace trust metrics">
-          <div>
-            <span>Active listings</span>
-            <strong id="activeListings">0</strong>
-          </div>
-          <div>
-            <span>Held in assurance</span>
-            <strong>Protected</strong>
-          </div>
-          <div>
-            <span>Dispute rate</span>
-            <strong>2.8%</strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="trust-strip">
-        <span><i data-lucide="shield-check"></i> Seller verification</span>
-        <span><i data-lucide="video"></i> Video proof required</span>
-        <span><i data-lucide="lock-keyhole"></i> Trade Assurance hold</span>
-        <span><i data-lucide="scale"></i> Admin dispute resolution</span>
-      </section>
-
-      <section class="legal-banner">
-        <i data-lucide="alert-triangle"></i>
-        <p>
-          Account transfers may violate game publisher terms. Buyers understand
-          purchased accounts may be banned, restricted, or recovered. GameTrade
-          Hub provides payment protection but cannot guarantee a publisher will
-          allow an account transfer.
-        </p>
-      </section>
-
-      <section id="auth" class="view is-visible">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Account access</p>
-            <h2>Log in or create your profile</h2>
-          </div>
-          <span class="status-pill pending" id="authStatus">Not signed in</span>
-        </div>
-        <div class="auth-layout">
-          <form class="listing-form" id="loginForm">
-            <h3>Log in</h3>
-            <label>Email<input required name="email" type="email" placeholder="you@example.com" /></label>
-            <label>Password<input required name="password" type="password" placeholder="Your password" /></label>
-            <button class="primary-button" type="submit"><i data-lucide="log-in"></i> Log in</button>
-            <div class="auth-actions">
-              <button class="secondary-button" id="openSignupModal" type="button"><i data-lucide="user-plus"></i> Sign up</button>
-              <button class="secondary-button" id="openAdminButton" type="button"><i data-lucide="shield"></i> Open as admin</button>
-            </div>
-          </form>
-
-          <aside class="review-card">
-            <h3>New here?</h3>
-            <p class="muted">Create a buyer or seller account from the signup popup. Sellers can complete verification before listing accounts.</p>
-            <ul class="check-list">
-              <li><i data-lucide="check"></i> Personal profile details</li>
-              <li><i data-lucide="check"></i> Buyer or seller account type</li>
-              <li><i data-lucide="check"></i> Supabase email authentication</li>
-            </ul>
-          </aside>
-        </div>
-      </section>
-
-      <section id="profile" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">User profile</p>
-            <h2>Account overview</h2>
-          </div>
-          <button class="secondary-button" id="logoutButton"><i data-lucide="log-out"></i> Log out</button>
-        </div>
-        <div class="profile-layout">
-          <section class="profile-panel">
-            <div class="profile-head">
-              <span class="profile-avatar" id="profileInitials">GU</span>
-              <div>
-                <h3 id="profileDisplayName">Guest</h3>
-                <p class="muted" id="profileEmail">Sign in to manage your marketplace profile.</p>
-              </div>
-            </div>
-            <div class="detail-list">
-              <div><span>Full name</span><strong id="profileFullName">Not set</strong></div>
-              <div><span>Username</span><strong id="profileUsername">Not set</strong></div>
-              <div><span>Country</span><strong id="profileCountry">Not set</strong></div>
-              <div><span>Phone</span><strong id="profilePhone">Not set</strong></div>
-              <div><span>Account type</span><strong id="profileRole">Buyer</strong></div>
-              <div><span>Email status</span><strong id="profileEmailStatus">Pending</strong></div>
-              <div><span>Seller KYC</span><strong id="profileKyc">Not started</strong></div>
-              <div><span>Completed trades</span><strong>0</strong></div>
-            </div>
-            <div class="button-row">
-              <button class="primary-button" data-view-target="sell"><i data-lucide="badge-check"></i> Start verification</button>
-              <button class="secondary-button" data-view-target="wallet"><i data-lucide="wallet"></i> Open wallet</button>
-            </div>
-          </section>
-
-          <aside class="review-card">
-            <h3>Profile checklist</h3>
-            <ul class="check-list">
-              <li><i data-lucide="check"></i> Add profile details</li>
-              <li><i data-lucide="check"></i> Verify email before trading</li>
-              <li><i data-lucide="check"></i> Complete seller KYC before listing</li>
-              <li><i data-lucide="check"></i> Read Trade Assurance rules</li>
-              <li><i data-lucide="check"></i> Keep all payments on platform</li>
-            </ul>
-          </aside>
-        </div>
-      </section>
-
-      <section id="marketplace" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Marketplace</p>
-            <h2>Browse verified account listings</h2>
-          </div>
-          <button class="secondary-button" id="clearFilters">
-            <i data-lucide="rotate-ccw"></i>
-            Reset filters
+          <button class="profile-card" id="walletButton">
+            <span class="avatar"></span>
+            <span>
+              <strong>Alex Gamer</strong>
+              <small id="walletBalance">$0.00</small>
+            </span>
+            <i data-lucide="refresh-cw"></i>
           </button>
         </div>
+      </aside>
 
-        <div class="market-shell">
-          <aside class="filters" aria-label="Marketplace filters">
-            <label>
-              Search
-              <div class="input-icon">
+      <main class="main-panel" id="home">
+        <header class="topbar">
+          <button class="mobile-menu" id="menuButton" aria-label="Open menu"><i data-lucide="menu"></i></button>
+          <label class="search-field">
+            <i data-lucide="search"></i>
+            <input id="searchInput" type="search" placeholder="Search for games, accounts..." autocomplete="off" />
+          </label>
+          <div class="top-actions">
+            <button class="icon-button" data-action="notifications" aria-label="Notifications">
+              <i data-lucide="bell"></i>
+            </button>
+            <button class="icon-button has-dot" data-action="messages" aria-label="Messages">
+              <i data-lucide="message-circle"></i>
+            </button>
+            <button class="seller-button" id="sellerButton">Become a Seller</button>
+            <button class="icon-button has-dot" data-action="account" aria-label="Account alerts">
+              <i data-lucide="circle-user-round"></i>
+            </button>
+            <button class="icon-button" id="cartButton" aria-label="Cart">
+              <i data-lucide="shopping-cart"></i>
+              <span class="cart-count" id="cartCount">0</span>
+            </button>
+          </div>
+        </header>
+
+        <section class="hero-card landing-view">
+          <div class="hero-content">
+            <h1>Buy &amp; Sell <span>Gaming</span> Accounts</h1>
+            <p>Trusted marketplace for top gaming accounts. Safe. Fast. Secure.</p>
+            <div class="hero-actions">
+              <button class="primary-button" data-scroll-target="games">Browse Accounts</button>
+              <button class="outline-button" id="sellHeroButton">Sell Your Account</button>
+            </div>
+            <div class="trust-row" aria-label="Trust features">
+              <span><i data-lucide="shield-check"></i> Secure Transactions</span>
+              <span><i data-lucide="headphones"></i> 24/7 Support</span>
+              <span><i data-lucide="badge-check"></i> Verified Sellers</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="games-section landing-view" id="games">
+          <div class="section-heading">
+            <h2>Popular Games</h2>
+            <button id="viewAllButton">View All</button>
+          </div>
+          <div class="games-grid" id="gamesGrid" aria-live="polite"></div>
+        </section>
+
+        <section class="browse-view" id="browsePage" aria-label="Browse accounts">
+          <div class="browse-head">
+            <div>
+              <p>Browse / All Accounts</p>
+              <h1>Browse Accounts</h1>
+            </div>
+            <div class="browse-tools">
+              <label>
+                Sort By
+                <select id="sortSelect">
+                  <option value="recent">Newest</option>
+                  <option value="price-low">Price: Low</option>
+                  <option value="price-high">Price: High</option>
+                </select>
+              </label>
+              <button class="icon-button" id="gridViewButton" aria-label="Grid view"><i data-lucide="grid-2x2"></i></button>
+              <button class="icon-button" id="compactViewButton" aria-label="Compact view"><i data-lucide="rows-3"></i></button>
+            </div>
+          </div>
+
+          <div class="browse-layout">
+            <aside class="filters-panel">
+              <div class="filter-block">
+                <div class="filter-title">
+                  <strong>Games</strong>
+                  <small id="gameFilterCount">All</small>
+                </div>
+                <div class="game-filter-list" id="gameFilterList"></div>
+              </div>
+              <div class="filter-block">
+                <strong>Price Range</strong>
+                <div class="price-inputs">
+                  <input id="minPrice" type="number" min="0" placeholder="Min" />
+                  <input id="maxPrice" type="number" min="0" placeholder="Max" />
+                </div>
+                <button class="primary-button filter-button" id="applyPriceButton">Filter</button>
+              </div>
+              <div class="filter-block">
+                <strong>Account Level</strong>
+                <select id="levelFilter">
+                  <option value="all">All</option>
+                  <option value="high">High level</option>
+                  <option value="mid">Mid level</option>
+                  <option value="starter">Starter</option>
+                </select>
+              </div>
+            </aside>
+
+            <div class="accounts-grid" id="accountsGrid" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section class="simple-view" id="categoriesPage" aria-label="Categories">
+          <div class="simple-shell">
+            <div class="simple-head">
+              <p>Categories</p>
+              <h1>Choose a game category</h1>
+              <span>Pick a category to browse listings once sellers add accounts.</span>
+            </div>
+            <div class="category-grid" id="categoryGrid"></div>
+          </div>
+        </section>
+
+        <section class="simple-view" id="favoritesPage" aria-label="Favorites">
+          <div class="simple-shell">
+            <div class="simple-head">
+              <p>Favorites</p>
+              <h1>Saved accounts</h1>
+              <span>Accounts you favorite will appear here.</span>
+            </div>
+            <div class="empty-action-card">
+              <i data-lucide="heart"></i>
+              <h2>No favorites yet</h2>
+              <p>Browse accounts and tap the heart icon to save listings for later.</p>
+              <button class="primary-button" data-empty-action="browse">Browse Accounts</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-view" id="detailPage" aria-label="Account details">
+          <button class="back-link" id="backToBrowse"><i data-lucide="chevron-left"></i> Back to Browse</button>
+          <div id="detailContent"></div>
+        </section>
+
+        <section class="sell-view" id="sellPage" aria-label="Sell your account">
+          <div class="sell-header">
+            <div>
+              <p>Sell Your Account</p>
+              <h1>Sell Your Account</h1>
+              <span>Complete the steps below to create a verified listing.</span>
+            </div>
+            <div class="stepper" id="sellStepper">
+              <span class="is-active"><strong>1</strong><small>Game Details</small></span>
+              <span><strong>2</strong><small>Account Details</small></span>
+              <span><strong>3</strong><small>Review & Price</small></span>
+            </div>
+          </div>
+
+          <div class="sell-layout">
+            <form class="sell-form" id="sellForm">
+              <div class="sell-card">
+                <label>
+                  Select Game
+                  <select name="game" required>
+                    <option>Call of Duty Mobile</option>
+                    <option>eFootball</option>
+                    <option>PUBG Mobile</option>
+                    <option>Free Fire</option>
+                    <option>Genshin Impact</option>
+                    <option>Clash of Clans</option>
+                  </select>
+                </label>
+                <label>
+                  Account Level
+                  <select name="level" required>
+                    <option>150</option>
+                    <option>120</option>
+                    <option>90</option>
+                    <option>60</option>
+                  </select>
+                </label>
+                <div>
+                  <strong>Rank / Tier</strong>
+                  <div class="upload-strip">
+                    <button type="button" style="background-image:url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=220&q=80')"></button>
+                    <button type="button" style="background-image:url('https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=220&q=80')"></button>
+                    <button type="button" style="background-image:url('https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?auto=format&fit=crop&w=220&q=80')"></button>
+                    <button type="button" class="add-upload"><i data-lucide="plus"></i></button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sell-card">
+                <label>
+                  Account Type
+                  <select name="type" required>
+                    <option>Full Access</option>
+                    <option>Email Access</option>
+                    <option>Linked Account</option>
+                  </select>
+                </label>
+                <label>
+                  Rank / Tier
+                  <select name="rank" required>
+                    <option>Legendary</option>
+                    <option>Mythic</option>
+                    <option>Diamond</option>
+                    <option>Gold</option>
+                  </select>
+                </label>
+                <label>
+                  Selling Price
+                  <input name="price" type="number" min="1" placeholder="120" />
+                </label>
+                <div>
+                  <strong>Upload Images</strong>
+                  <div class="upload-strip">
+                    <button type="button" style="background-image:url('https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=220&q=80')"></button>
+                    <button type="button" style="background-image:url('https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=220&q=80')"></button>
+                    <button type="button" style="background-image:url('https://images.unsplash.com/photo-1612404730960-5c71577fca11?auto=format&fit=crop&w=220&q=80')"></button>
+                    <button type="button" class="add-upload"><i data-lucide="plus"></i></button>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="sell-tips">
+                <h3>Tips for Better Sales</h3>
+                <ul>
+                  <li>Use clear screenshots</li>
+                  <li>Show important stats</li>
+                  <li>Be honest about account details</li>
+                  <li>Respond quickly to buyers</li>
+                </ul>
+                <button class="primary-button" type="submit">Next Step</button>
+              </aside>
+            </form>
+          </div>
+        </section>
+
+        <section class="orders-view" id="ordersPage" aria-label="My orders">
+          <div class="orders-shell">
+            <h1>My Orders</h1>
+            <div class="order-tabs" id="orderTabs">
+              <button class="is-active" data-order-filter="all">All</button>
+              <button data-order-filter="pending">Pending</button>
+              <button data-order-filter="progress">In Progress</button>
+              <button data-order-filter="completed">Completed</button>
+              <button data-order-filter="cancelled">Cancelled</button>
+            </div>
+            <div class="orders-list" id="ordersList"></div>
+          </div>
+        </section>
+
+        <section class="messages-view" id="messagesPage" aria-label="Messages">
+          <div class="messages-shell">
+            <aside class="conversation-panel">
+              <label class="message-search">
                 <i data-lucide="search"></i>
-                <input id="searchInput" type="search" placeholder="Game, rank, item..." />
-              </div>
-            </label>
-            <label>
-              Platform
-              <select id="platformFilter">
-                <option value="all">All platforms</option>
-                <option>PC</option>
-                <option>PlayStation</option>
-                <option>Xbox</option>
-                <option>Mobile</option>
-              </select>
-            </label>
-            <label>
-              Region
-              <select id="regionFilter">
-                <option value="all">All regions</option>
-                <option>Europe</option>
-                <option>North America</option>
-                <option>West Africa</option>
-                <option>Asia</option>
-              </select>
-            </label>
-            <label>
-              Sort
-              <select id="sortFilter">
-                <option value="newest">Newest</option>
-                <option value="rating">Verified sellers</option>
-              </select>
-            </label>
-          </aside>
-          <div>
-            <div class="result-line">
-              <span id="resultCount">0 listings</span>
-              <span class="muted">Public listings require proof review and legal risk acknowledgement.</span>
-            </div>
-            <div id="listingGrid" class="listing-grid" aria-live="polite"></div>
-          </div>
-        </div>
-      </section>
+                <input id="messageSearch" type="search" placeholder="Messages..." />
+              </label>
+              <div class="conversation-list" id="conversationList"></div>
+            </aside>
 
-      <section id="sell" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Seller studio</p>
-            <h2>Create account listing</h2>
+            <section class="chat-panel">
+              <header class="chat-header">
+                <span class="chat-avatar"></span>
+                <div>
+                  <h2 id="chatName">Messages</h2>
+                  <p><span></span> Online</p>
+                </div>
+                <button class="icon-button" aria-label="Chat options"><i data-lucide="ellipsis"></i></button>
+              </header>
+              <div class="chat-body" id="chatBody"></div>
+              <form class="chat-input" id="chatForm">
+                <input id="chatMessage" placeholder="Type a message..." autocomplete="off" />
+                <button aria-label="Send message"><i data-lucide="send"></i></button>
+              </form>
+            </section>
           </div>
-          <span class="status-pill pending">Admin review required</span>
-        </div>
-        <div class="seller-layout">
-          <form class="listing-form" id="listingForm">
-            <div class="form-grid">
-              <label>Game title
-                <select required name="game">
-                  <option>Call of Duty</option>
-                  <option>FIFA / EA FC</option>
-                  <option>Fortnite</option>
-                  <option>PUBG</option>
-                  <option>Shadow Ops</option>
-                  <option>Legends Rift</option>
-                </select>
-              </label>
-              <label>Account title<input required name="title" placeholder="Rare skins, high rank..." /></label>
-              <input name="price" type="hidden" value="1" />
-              <label>Account level<input required name="level" type="number" min="1" placeholder="86" /></label>
-              <label>Rank or tier<input required name="rank" placeholder="Diamond II" /></label>
-              <label>Server or region<input required name="region" placeholder="West Africa" /></label>
-              <label>Platform
-                <select name="platform">
-                  <option>PC</option>
-                  <option>PlayStation</option>
-                  <option>Xbox</option>
-                  <option>Mobile</option>
-                </select>
-              </label>
-              <label>Transfer method<input required name="transfer" placeholder="Email change + 2FA reset" /></label>
-              <label>Skins/items count<input name="itemsCount" type="number" min="0" placeholder="58" /></label>
-              <label>Coins/points balance<input name="coinsBalance" type="number" min="0" placeholder="24000" /></label>
-              <label>Account age in months<input name="accountAgeMonths" type="number" min="0" placeholder="36" /></label>
-              <label>Two-factor status
-                <select name="twoFactorStatus">
-                  <option value="will_be_removed">Will be removed during transfer</option>
-                  <option value="enabled">Enabled</option>
-                  <option value="disabled">Disabled</option>
-                  <option value="unknown">Unknown</option>
-                </select>
-              </label>
-              <label>Inspection period
-                <select name="inspectionPeriodHours">
-                  <option value="24">24 hours</option>
-                  <option value="48" selected>48 hours</option>
-                  <option value="72">72 hours</option>
-                </select>
-              </label>
-              <label>Ban history<input name="banHistory" placeholder="Clean, warning disclosed, or banned before" /></label>
+        </section>
+
+        <section class="wallet-view" id="walletPage" aria-label="Wallet and trade assurance">
+          <div class="wallet-hero">
+            <div>
+              <p>Trade Assurance Wallet</p>
+              <h1>Protected payments for every account trade</h1>
+              <span>Funds stay secured in escrow until the buyer confirms account access or support resolves the case.</span>
             </div>
-            <label>Description<textarea required name="description" placeholder="Include inventory, age, currency, ban history, and seller notes."></textarea></label>
-            <div class="checkbox-grid">
-              <label><input name="linkedEmailIncluded" type="checkbox" /> Linked email included</label>
-              <label><input name="originalEmailIncluded" type="checkbox" /> Original email included</label>
-              <label><input required name="ownershipDeclared" type="checkbox" /> I own this account and can prove it</label>
-              <label><input required name="termsAcknowledged" type="checkbox" /> I understand publisher transfer risk</label>
-            </div>
-            <div class="upload-row">
-              <div class="upload-box">
-                <i data-lucide="video"></i>
-                <strong>Video proof</strong>
-                <span>Show login, account stats, in-game profile, rank, recording date, and seller username. Hide passwords and recovery details.</span>
-                <button type="button" class="secondary-button">Choose video</button>
-              </div>
-              <div class="upload-box">
-                <i data-lucide="image"></i>
-                <strong>Screenshots</strong>
-                <span>Dashboard, rank/level proof, skins, coins, rewards, and safe profile views.</span>
-                <button type="button" class="secondary-button">Choose images</button>
+            <div class="wallet-balance-card">
+              <span>Available Balance</span>
+              <strong>$0.00</strong>
+              <small>Escrow protected: $0.00</small>
+              <div>
+                <button class="primary-button" data-wallet-action="deposit">Add Funds</button>
+                <button class="outline-button" data-wallet-action="withdraw">Withdraw</button>
               </div>
             </div>
-            <div class="legal-note">
-              <i data-lucide="alert-triangle"></i>
-              <p>Call of Duty, FIFA/EA FC, and other publishers may restrict account transfers. Listings need admin approval before buyers can purchase.</p>
-            </div>
-            <button class="primary-button" type="submit">
-              <i data-lucide="send"></i>
-              Submit for verification
-            </button>
-          </form>
+          </div>
 
-          <aside class="review-card">
-            <h3>Approval checklist</h3>
-            <ul class="check-list">
-              <li><i data-lucide="check"></i> KYC or seller verification is reviewed</li>
-              <li><i data-lucide="check"></i> Dashboard screenshot is uploaded</li>
-              <li><i data-lucide="check"></i> Video shows level, rank, and inventory</li>
-              <li><i data-lucide="check"></i> Seller username and recording date are visible</li>
-              <li><i data-lucide="check"></i> No passwords or recovery emails visible</li>
-              <li><i data-lucide="check"></i> Transfer method is realistic</li>
-              <li><i data-lucide="check"></i> Ban history is disclosed</li>
-              <li><i data-lucide="check"></i> Game restriction policy is checked</li>
-            </ul>
-          </aside>
-        </div>
-      </section>
+          <div class="assurance-grid">
+            <article>
+              <i data-lucide="shield-check"></i>
+              <h3>Payment Held Safely</h3>
+              <p>Your money is locked during transfer and cannot be released without confirmation or support review.</p>
+            </article>
+            <article>
+              <i data-lucide="scan-eye"></i>
+              <h3>Account Inspection</h3>
+              <p>Buyers get time to verify login, rank, inventory, email access, and seller claims.</p>
+            </article>
+            <article>
+              <i data-lucide="scale"></i>
+              <h3>Dispute Protection</h3>
+              <p>If something is wrong, upload evidence and support pauses release while reviewing the trade.</p>
+            </article>
+          </div>
 
-      <section id="wallet" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Wallet</p>
-            <h2>Trade Assurance balances</h2>
-          </div>
-          <button class="primary-button" id="depositFunds">
-            <i data-lucide="wallet"></i>
-            Deposit funds
-          </button>
-        </div>
-        <div class="wallet-grid">
-          <article class="metric-card"><span>Buyer wallet balance</span><strong>GHS 0</strong><small>No deposits yet</small></article>
-          <article class="metric-card"><span>Held balance</span><strong>GHS 0</strong><small>No Trade Assurance holds yet</small></article>
-          <article class="metric-card"><span>Seller pending balance</span><strong>GHS 0</strong><small>No pending seller funds yet</small></article>
-          <article class="metric-card"><span>Seller available balance</span><strong>GHS 0</strong><small>No withdrawable funds yet</small></article>
-          <article class="metric-card"><span>Platform commission</span><strong>GHS 0</strong><small>No completed trades yet</small></article>
-        </div>
-        <div class="policy-grid">
-          <article class="queue-panel">
-            <h3>Trade Assurance flow</h3>
-            <div class="flow-row"><span>1</span><strong>Buyer deposits money</strong><small>Funds enter buyer wallet.</small></div>
-            <div class="flow-row"><span>2</span><strong>Buyer purchases account</strong><small>Money moves to held balance.</small></div>
-            <div class="flow-row"><span>3</span><strong>Seller delivers securely</strong><small>Credentials are submitted only after payment hold.</small></div>
-            <div class="flow-row"><span>4</span><strong>Buyer confirms or disputes</strong><small>Funds release only after confirmation or admin decision.</small></div>
-          </article>
-          <article class="queue-panel">
-            <h3>Withdrawal controls</h3>
-            <p class="muted">Seller withdrawals come from available balance only. Pending balance cannot be withdrawn during an inspection period or active dispute.</p>
-            <button class="secondary-button" id="requestWithdrawal"><i data-lucide="banknote-arrow-up"></i> Request withdrawal</button>
-          </article>
-        </div>
-      </section>
+          <div class="wallet-layout">
+            <section class="escrow-panel">
+              <div class="panel-heading">
+                <h2>Active Protected Trades</h2>
+                <button class="outline-button" data-wallet-action="policy">Protection Policy</button>
+              </div>
+              <div class="escrow-list">
+                <article class="empty-card">
+                  <span class="escrow-icon"><i data-lucide="lock-keyhole"></i></span>
+                  <div>
+                    <strong>No protected trades yet</strong>
+                    <small>Escrow activity will appear here after a buyer starts a trade.</small>
+                  </div>
+                </article>
+              </div>
+            </section>
 
-      <section id="orders" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Trade Assurance</p>
-            <h2>Orders, delivery, and disputes</h2>
+            <aside class="release-panel">
+              <h2>Trade Assurance Flow</h2>
+              <div class="assurance-steps">
+                <span>1</span><p>Buyer pays into protected escrow</p>
+                <span>2</span><p>Seller transfers account access</p>
+                <span>3</span><p>Buyer verifies account details</p>
+                <span>4</span><p>Funds release or support resolves dispute</p>
+              </div>
+            </aside>
           </div>
-          <button class="secondary-button" id="openDispute">
-            <i data-lucide="message-square-warning"></i>
-            Open dispute
-          </button>
-        </div>
-        <div class="order-layout">
-          <div class="timeline-panel">
-            <h3>Order #GTH-2409</h3>
-            <p class="muted">Shadow Ops account from KofiRanked to AmaPlayz</p>
-            <div class="timeline">
-              <div class="timeline-step done"><span></span><strong>Payment held</strong><small>Buyer funds moved to Trade Assurance hold.</small></div>
-              <div class="timeline-step done"><span></span><strong>Secure delivery submitted</strong><small>Seller used the protected delivery page, not normal chat.</small></div>
-              <div class="timeline-step active"><span></span><strong>48-hour inspection active</strong><small>Buyer verifies login, items, email access, and 2FA transfer.</small></div>
-              <div class="timeline-step"><span></span><strong>Funds released</strong><small>Auto-release happens after inspection if no dispute is opened.</small></div>
+        </section>
+
+        <section class="support-view" id="supportPage" aria-label="Support center">
+          <div class="support-hero">
+            <div>
+              <p>Support Center</p>
+              <h1>Get help with trades, payments, and account transfers</h1>
             </div>
-          </div>
-          <div class="confirmation-panel">
-            <h3>Buyer inspection checklist</h3>
-            <label><input type="checkbox" checked /> Login details received</label>
-            <label><input type="checkbox" checked /> Password changed</label>
-            <label><input type="checkbox" /> Recovery email changed</label>
-            <label><input type="checkbox" /> Two-factor authentication updated</label>
-            <label><input type="checkbox" /> Listed skins, coins, and rank verified</label>
-            <div class="button-row">
-              <button class="primary-button" id="confirmTransfer"><i data-lucide="check-circle"></i> Confirm received</button>
-              <button class="secondary-button" id="pauseEscrow"><i data-lucide="pause-circle"></i> Pause release</button>
-            </div>
-          </div>
-        </div>
-        <div class="order-layout stacked">
-          <div class="queue-panel secure-delivery">
-            <h3>Secure delivery page</h3>
-            <p class="muted">Sensitive account details are only visible after payment is held. They are never posted into normal chat.</p>
-            <div class="form-grid">
-              <label>Email/login<input value="seller-hidden@example.com" readonly /></label>
-              <label>Password<input value="Hidden until buyer payment hold" readonly /></label>
-              <label>Backup codes<input value="Encrypted delivery record" readonly /></label>
-              <label>Original email access<input value="Included after transfer confirmation" readonly /></label>
-            </div>
-            <label>Transfer instructions<textarea readonly>Change password, replace recovery email, update two-factor authentication, then verify listed skins and coins.</textarea></label>
-          </div>
-          <div class="queue-panel">
-            <h3>Open dispute</h3>
-            <label>Reason
-              <select id="disputeReason">
-                <option>Wrong account details</option>
-                <option>Account not as described</option>
-                <option>Account recovered by seller</option>
-                <option>Login not working</option>
-                <option>Account banned</option>
-                <option>Missing skins/players/coins</option>
-                <option>Seller gave fake proof</option>
-              </select>
+            <label class="support-search">
+              <i data-lucide="search"></i>
+              <input id="supportSearch" type="search" placeholder="Search support topics..." />
             </label>
-            <label>Evidence notes<textarea id="disputeEvidence" placeholder="Describe the problem and attach evidence in production."></textarea></label>
-            <button class="secondary-button" id="submitDispute"><i data-lucide="scale"></i> Submit dispute evidence</button>
           </div>
-        </div>
-      </section>
 
-      <section id="tools" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Seller tools</p>
-            <h2>Account value calculator</h2>
+          <div class="support-grid" id="supportGrid">
+            <article data-support-topic="escrow payment dispute">
+              <i data-lucide="shield-alert"></i>
+              <h3>Escrow & Disputes</h3>
+              <p>Pause release, submit evidence, or ask support to review a risky order.</p>
+              <button class="outline-button" data-support-action="Open dispute">Open dispute</button>
+            </article>
+            <article data-support-topic="payment wallet withdrawal deposit">
+              <i data-lucide="credit-card"></i>
+              <h3>Payments & Wallet</h3>
+              <p>Fix failed deposits, delayed withdrawals, or escrow payment questions.</p>
+              <button class="outline-button" data-support-action="Payment ticket">Payment ticket</button>
+            </article>
+            <article data-support-topic="account login transfer email password">
+              <i data-lucide="key-round"></i>
+              <h3>Account Transfer</h3>
+              <p>Get help with login handoff, email access, 2FA reset, or missing inventory.</p>
+              <button class="outline-button" data-support-action="Transfer help">Transfer help</button>
+            </article>
+            <article data-support-topic="seller verification listing review">
+              <i data-lucide="badge-check"></i>
+              <h3>Seller Verification</h3>
+              <p>Review listing rules, proof requirements, and seller approval status.</p>
+              <button class="outline-button" data-support-action="Verify seller">Verify seller</button>
+            </article>
           </div>
-          <span class="status-pill verified">Beta estimate</span>
-        </div>
-        <div class="seller-layout">
-          <form class="listing-form" id="valueForm">
-            <div class="form-grid">
-              <label>Game
-                <select name="game">
-                  <option>Call of Duty</option>
-                  <option>FIFA / EA FC</option>
-                  <option>Fortnite</option>
-                  <option>PUBG</option>
-                  <option>Other</option>
-                </select>
-              </label>
-              <label>Platform
-                <select name="platform">
-                  <option>PlayStation</option>
-                  <option>Xbox</option>
-                  <option>PC</option>
-                  <option>Mobile</option>
-                </select>
-              </label>
-              <label>Rank tier<input name="rank" placeholder="Gold, Diamond, Elite..." /></label>
-              <label>Level<input name="level" type="number" min="0" value="50" /></label>
-              <label>Skins / rare items<input name="items" type="number" min="0" value="20" /></label>
-              <label>Coins / points<input name="coins" type="number" min="0" value="10000" /></label>
-              <label>Account age months<input name="age" type="number" min="0" value="24" /></label>
-              <label>Ban history
-                <select name="banHistory">
-                  <option value="clean">Clean</option>
-                  <option value="warning">Warning disclosed</option>
-                  <option value="ban">Past ban</option>
-                </select>
-              </label>
-            </div>
-            <button class="primary-button" type="submit"><i data-lucide="calculator"></i> Check value</button>
-          </form>
-          <aside class="review-card estimate-card">
-            <h3>Value guidance</h3>
-            <strong id="estimateValue">No estimate yet</strong>
-            <p class="muted">Guidance uses game risk, rank, level, rare items, coins, platform, age, region, and ban history. Admin review should still verify the listing.</p>
-          </aside>
-        </div>
-      </section>
 
-      <section id="admin" class="view">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Admin console</p>
-            <h2>Moderation and operations</h2>
+          <div class="ticket-panel">
+            <section>
+              <h2>Open Tickets</h2>
+              <div class="ticket-row"><span>None</span><strong>No open tickets</strong><em>All clear</em></div>
+            </section>
+            <aside>
+              <h2>24/7 Live Help</h2>
+              <p>Average first response: 6 minutes</p>
+              <button class="primary-button" data-support-action="Live chat">Start Live Chat</button>
+            </aside>
           </div>
-          <span class="status-pill verified">Super Admin</span>
-        </div>
-        <div class="admin-grid">
-          <article class="metric-card"><span>Pending listings</span><strong>0</strong><small>Review queue is cleared</small></article>
-          <article class="metric-card"><span>Open disputes</span><strong>0</strong><small>Evidence queue is cleared</small></article>
-          <article class="metric-card"><span>Withdrawal requests</span><strong>0</strong><small>No payout requests yet</small></article>
-          <article class="metric-card"><span>Flagged messages</span><strong>0</strong><small>No flagged messages yet</small></article>
-        </div>
-        <div class="moderation-layout">
-          <div class="queue-panel">
-            <h3>Listing review queue</h3>
-            <div id="moderationQueue"></div>
-          </div>
-          <div class="queue-panel">
-            <h3>Risk controls</h3>
-            <div class="risk-item"><i data-lucide="ban"></i><div><strong>Publisher-restricted game</strong><span>Require warning or reject listings from restricted publishers.</span></div></div>
-            <div class="risk-item"><i data-lucide="scan-eye"></i><div><strong>Sensitive video exposure</strong><span>Require replacement when personal data appears.</span></div></div>
-            <div class="risk-item"><i data-lucide="badge-alert"></i><div><strong>Suspicious seller</strong><span>Route to KYC and verification before payout.</span></div></div>
-            <div class="risk-item"><i data-lucide="receipt"></i><div><strong>Payment integrity</strong><span>Refunds, releases, partial refunds, and bans are logged.</span></div></div>
-          </div>
-        </div>
-        <div class="policy-grid">
-          <article class="queue-panel">
-            <h3>Verification badges</h3>
-            <div class="badge-list">
-              <span class="status-pill verified">Verified Seller</span>
-              <span class="status-pill verified">Proof Approved</span>
-              <span class="status-pill verified">High Trust Seller</span>
-              <span class="status-pill pending">Instant Delivery</span>
-              <span class="status-pill pending">Manual Delivery</span>
-              <span class="status-pill verified">Trade Assurance Protected</span>
-            </div>
-          </article>
-          <article class="queue-panel">
-            <h3>Anti-scam rules</h3>
-            <ul class="check-list">
-              <li><i data-lucide="x"></i> No direct WhatsApp payment</li>
-              <li><i data-lucide="x"></i> No off-platform deals</li>
-              <li><i data-lucide="x"></i> No fake screenshots</li>
-              <li><i data-lucide="x"></i> No duplicate listings</li>
-              <li><i data-lucide="x"></i> No stolen accounts or recovery after sale</li>
-            </ul>
-          </article>
-        </div>
-      </section>
-    </main>
-
-    <div class="modal-backdrop" id="listingModal" aria-hidden="true">
-      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <button class="icon-button close-modal" aria-label="Close listing details">
-          <i data-lucide="x"></i>
-        </button>
-        <div id="modalContent"></div>
-      </section>
-    </div>
-
-    <div class="modal-backdrop" id="signupModal" aria-hidden="true">
-      <section class="modal signup-modal" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
-        <button class="icon-button close-signup" aria-label="Close signup form">
-          <i data-lucide="x"></i>
-        </button>
-        <form class="listing-form" id="signupForm">
-          <h2 id="signupTitle">Create account</h2>
-          <div class="form-grid">
-            <label>Full name<input required name="fullName" placeholder="Your legal name" /></label>
-            <label>Display name<input required name="displayName" placeholder="Public marketplace name" /></label>
-            <label>Username<input required name="username" placeholder="unique_username" /></label>
-            <label>Country<input required name="country" placeholder="Ghana" /></label>
-            <label>Phone number<input name="phone" type="tel" placeholder="+233..." /></label>
-            <label>Account type
-              <select name="role">
-                <option value="buyer">Buyer</option>
-                <option value="seller">Seller</option>
-              </select>
-            </label>
-            <label>Email<input required name="email" type="email" placeholder="you@example.com" /></label>
-            <label>Password<input required name="password" type="password" minlength="6" placeholder="At least 6 characters" /></label>
-          </div>
-          <div class="legal-note">
-            <i data-lucide="shield-check"></i>
-            <p>Your personal details create your marketplace profile. Seller KYC is still required before listing accounts.</p>
-          </div>
-          <button class="primary-button" type="submit"><i data-lucide="user-plus"></i> Sign up</button>
-        </form>
-      </section>
+        </section>
+      </main>
     </div>
 
     <div class="toast" id="toast" role="status"></div>
+
+    <div class="modal-backdrop" id="modal" aria-hidden="true">
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="icon-button modal-close" id="modalClose" aria-label="Close modal"><i data-lucide="x"></i></button>
+        <div id="modalContent"></div>
+      </section>
+    </div>
   </body>
 </html>
